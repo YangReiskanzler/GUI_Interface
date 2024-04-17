@@ -15,7 +15,7 @@ class MyGUI:
         self.root.counter = 0
         self.click_counter = 0
         self.num_circles = 8
-        self.canvas_width = 700
+        self.canvas_width = 500
         self.canvas_height = 500
         self.canvas = ctk.CTkCanvas(self.root, width=self.canvas_width, height=self.canvas_height)
         self.canvas.configure(bg="black")
@@ -77,7 +77,7 @@ class MyGUI:
             self.canvas.pack()
 
     def draw_pyramid(self):
-        x0 = (self.canvas_width - (self.num_circles * 2 * self.radius + (self.num_circles - 1) * self.gap)) // 2
+        x0 = self.canvas_width // 2 - (self.radius * (self.num_circles / 2))
         y0 = self.canvas_height // 2
         rows = (self.num_circles + 1) // 2
         for i in range(rows):
