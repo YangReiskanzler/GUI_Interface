@@ -3,6 +3,8 @@ import customtkinter as ctk
 
 class MyGUI:
     def __init__(self):
+        self.radius = 15
+        self.gap = 5
         self.root = ctk.CTk()
         self.root.geometry("500x1000")
         self.root.title("Beerpong")
@@ -31,6 +33,7 @@ class MyGUI:
         self.message_label.pack()
 
         self.score_label = ctk.CTkLabel(self.root, text=f"Score: {self.root.counter}", font=("Helvetica", 16))
+        self.myentry.bind("<Return>", lambda event: self.display_name())
 
     def circle_clicked(self, event):
         item = self.canvas.find_closest(event.x, event.y)[0]
@@ -74,19 +77,17 @@ class MyGUI:
             self.canvas.pack()
 
     def draw_pyramid(self):
-        x0 = self.canvas_width // 3
+        x0 = (self.canvas_width - (self.num_circles * 2 * self.radius + (self.num_circles - 1) * self.gap)) // 2
         y0 = self.canvas_height // 2
-        radius = 15
-        gap = 5
         rows = (self.num_circles + 1) // 2
         for i in range(rows):
             for j in range(i + 1):
                 circle = self.canvas.create_oval(
-                    x0 + j * (2 * radius + gap) + (rows - i - 1) * (radius + gap),  # x-Koordinate
-                    y0 - i * (2 * radius + gap),  # y-Koordinate
-                    x0 + j * (2 * radius + gap) + 2 * radius + (rows - i - 1) * (radius + gap),
+                    x0 + j * (2 * self.radius + self.gap) + (rows - i - 1) * (self.radius + self.gap),  # x-Koordinate
+                    y0 - i * (2 * self.radius + self.gap),  # y-Koordinate
+                    x0 + j * (2 * self.radius + self.gap) + 2 * self.radius + (rows - i - 1) * (self.radius + self.gap),
                     # x-Koordinate + Durchmesser
-                    y0 - i * (2 * radius + gap) + 2 * radius,  # y-Koordinate + Durchmesser
+                    y0 - i * (2 * self.radius + self.gap) + 2 * self.radius,  # y-Koordinate + Durchmesser
                     fill="red", outline="black"
                 )
                 self.canvas.tag_bind(circle, '<Button-1>',
