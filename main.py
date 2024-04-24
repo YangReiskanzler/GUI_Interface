@@ -35,6 +35,11 @@ class MyGUI:
         self.score_label = ctk.CTkLabel(self.root, text=f"Score: {self.root.counter}", font=("Helvetica", 16))
         self.myentry.bind("<Return>", lambda event: self.display_name())
 
+        self.reset_game_button = ctk.CTkButton(self.root, text="Reset Score", command=self.reset_game)
+
+        self.reset_all_button = ctk.CTkButton(self.root, text="Reset All", command=self.reset_all)
+
+
     def circle_clicked(self, event):
         item = self.canvas.find_closest(event.x, event.y)[0]
         self.canvas.itemconfigure(item, fill="gray")
@@ -72,9 +77,12 @@ class MyGUI:
             self.submit_button.pack_forget()
             self.instruction_label.pack_forget()
             self.message_label.configure(text=f"{name}")
+            self.reset_game_button.pack(pady=10)
+            self.reset_all_button.pack(pady=10)
             self.score_label.pack(padx=20, pady=20)
             self.draw_pyramid()
             self.canvas.pack()
+
 
     def draw_pyramid(self):
         x0 = self.canvas_width // 2 - (self.radius * (self.num_circles / 2))
@@ -92,6 +100,26 @@ class MyGUI:
                 )
                 self.canvas.tag_bind(circle, '<Button-1>',
                                      lambda e: self.circle_clicked(e))  # Mausklick-Ereignis binden
+
+    def reset_game(self):
+        if self.click_counter == 10:
+            self.root.counter = 0
+            self.score_label.configure(text=f"Score: {self.root.counter}")
+            self.click_counter = 0
+            self.num_circles = 8
+            self.canvas.delete("all")
+            self.draw_pyramid()
+
+    def reset_all(self):
+        self.reset_game()
+        self.message_label.configure(text="Input your name:")
+        self.myentry.delete(0, "end")
+        self.myentry.pack()
+        self.submit_button.pack(pady=10)
+        self.reset_game_button.pack_forget()
+        self.reset_all_button.pack_forget()
+        self.score_label.pack_forget()
+        self.canvas.pack_forget()
 
     def run(self):
         self.root.mainloop()
